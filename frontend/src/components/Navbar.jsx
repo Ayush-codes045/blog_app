@@ -10,7 +10,6 @@ function Navbar() {
   const [show, setShow] = useState(false);
 
   const { profile, isAuthenticated, setIsAuthenticated } = useAuth();
-  console.log(profile?.user);
   const navigateTo = useNavigate();
 
   const handleLogout = async (e) => {
@@ -35,8 +34,9 @@ function Navbar() {
     <>
       <nav className=" shadow-lg px-4 py-2">
         <div className="flex items-center justify-between container mx-auto">
-          <div className="font-semibold text-xl">
-            Cilli<span className="text-blue-500">Blog</span>
+          <div className="font-bold text-2xl flex flex-col">
+            Blogify<span className="text-blue-500">App</span>
+            <span className="text-xs text-gray-500 font-normal mt-1">Your space to share, discover, and connect through blogs.</span>
           </div>
           {/* Desktop */}
           <div className=" mx-6">
@@ -151,6 +151,15 @@ function Navbar() {
               >
                 CONTACT
               </Link>
+              {isAuthenticated && profile?.role === "admin" && (
+                <Link
+                  to="/dashboard"
+                  onClick={() => setShow(!show)}
+                  className="bg-blue-600 text-white font-semibold hover:bg-blue-800 duration-300 px-4 py-2 rounded"
+                >
+                  DASHBOARD
+                </Link>
+              )}
             </ul>
           </div>
         )}

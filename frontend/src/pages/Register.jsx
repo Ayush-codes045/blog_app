@@ -52,7 +52,7 @@ function Register() {
       //console.log(res);
       localStorage.setItem("jwt", data.token); // storing token in localStorage so that if user refreshed the page it will not redirect again in login
       toast.success( "User registered successfully");
-      setProfile(data);
+      setProfile(data.user);
       setIsAuthenticated(true);
       setName("");
       setEmail("");
@@ -74,10 +74,12 @@ function Register() {
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8">
           <form onSubmit={handleRegister}>
-            <div className="font-semibold text-xl items-center text-center">
-              Cilli<span className="text-blue-500">Blog</span>
+            <div className="font-bold text-2xl items-center text-center flex flex-col">
+              Blogify<span className="text-blue-500">App</span>
+              <span className="text-xs text-gray-500 font-normal mt-1">Where Stories Come Alive</span>
             </div>
-            <h1 className="text-xl font-semibold mb-6">Register</h1>
+            <h1 className="text-xl font-semibold mb-2">Register</h1>
+            <p className="text-gray-500 text-sm mb-6 text-center">Join Blogify and start sharing your stories with the world!</p>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}

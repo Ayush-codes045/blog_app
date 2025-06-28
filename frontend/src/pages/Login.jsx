@@ -1,3 +1,4 @@
+// ✅ Login.jsx
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
@@ -5,8 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 
 function Login() {
-  const { isAuthenticated, setIsAuthenticated, setProfile } = useAuth();
-
+  const { setIsAuthenticated, updateProfile } = useAuth();
   const navigateTo = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,14 +26,15 @@ function Login() {
           },
         }
       );
-      console.log(data);
-      // Store the token in localStorage
-      localStorage.setItem("jwt", data.token); // storing token in localStorage so that if user refreshed the page it will not redirect again in login
-      toast.success(data.message || "User Logined successfully", {
+
+      localStorage.setItem("jwt", data.token);
+      toast.success(data.message || "User Logged in successfully", {
         duration: 3000,
       });
-      setProfile(data);
-      setIsAuthenticated(true);
+
+      // ✅ Fetch profile again after login
+      await updateProfile();
+
       setEmail("");
       setPassword("");
       setRole("");
@@ -41,10 +42,8 @@ function Login() {
     } catch (error) {
       console.log(error);
       toast.error(
-        error.response.data.message || "Please fill the required fields",
-        {
-          duration: 3000,
-        }
+        error.response?.data?.message || "Please fill the required fields",
+        { duration: 3000 }
       );
     }
   };
@@ -54,10 +53,12 @@ function Login() {
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8">
           <form onSubmit={handleLogin}>
-            <div className="font-semibold text-xl items-center text-center">
-              Cilli<span className="text-blue-500">Blog</span>
+            <div className="font-bold text-2xl items-center text-center flex flex-col">
+              Blogify<span className="text-blue-500">App</span>
+              <span className="text-xs text-gray-500 font-normal mt-1">Where Stories Come Alive</span>
             </div>
-            <h1 className="text-xl font-semibold mb-6">Login</h1>
+            <h1 className="text-xl font-semibold mb-2">Login</h1>
+            <p className="text-gray-500 text-sm mb-6 text-center">Welcome back! Log in to explore, create, and connect on Blogify.</p>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
@@ -74,7 +75,7 @@ function Login() {
                 placeholder="Your Email Address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-2  border rounded-md"
+                className="w-full p-2 border rounded-md"
               />
             </div>
 
@@ -84,13 +85,13 @@ function Login() {
                 placeholder="Your Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2  border rounded-md"
+                className="w-full p-2 border rounded-md"
               />
             </div>
 
             <p className="text-center mb-4">
-              New User?{" "}
-              <Link to={"/register"} className="text-blue-600">
+              New User?{' '}
+              <Link to="/register" className="text-blue-600">
                 Register Now
               </Link>
             </p>

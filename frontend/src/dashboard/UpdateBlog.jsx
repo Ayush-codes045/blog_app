@@ -2,10 +2,12 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 function UpdateBlog() {
   const navigateTo = useNavigate();
   const { id } = useParams();
+  const { fetchBlogs } = useAuth();
 
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -13,6 +15,7 @@ function UpdateBlog() {
 
   const [blogImage, setBlogImage] = useState("");
   const [blogImagePreview, setBlogImagePreview] = useState("");
+  const [existingImageUrl, setExistingImageUrl] = useState("");
 
   const changePhotoHandler = (e) => {
     console.log(e);
@@ -42,7 +45,7 @@ function UpdateBlog() {
         setTitle(data?.title);
         setCategory(data?.category);
         setAbout(data?.about);
-        setBlogImage(data?.blogImage.url);
+        setExistingImageUrl(data?.blogImage?.url || "");
       } catch (error) {
         console.log(error);
         toast.error("Please fill the required fields");
@@ -58,7 +61,9 @@ function UpdateBlog() {
     formData.append("category", category);
     formData.append("about", about);
 
-    formData.append("blogImage", blogImage);
+    if (blogImage instanceof File) {
+      formData.append("blogImage", blogImage);
+    }
     try {
       const { data } = await axios.put(
         `http://localhost:4001/api/blogs/update/${id}`,
@@ -72,6 +77,7 @@ function UpdateBlog() {
       );
       console.log(data);
       toast.success(data.message || "Blog updated successfully");
+      fetchBlogs && fetchBlogs();
       navigateTo("/");
     } catch (error) {
       console.log(error);
@@ -115,8 +121,8 @@ function UpdateBlog() {
                 src={
                   blogImagePreview
                     ? blogImagePreview
-                    : blogImage
-                    ? blogImage
+                    : existingImageUrl
+                    ? existingImageUrl
                     : "/imgPL.webp"
                 }
                 alt="Blog Main"

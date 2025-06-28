@@ -2,9 +2,11 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 function MyBlogs() {
   const [myBlogs, setMyBlogs] = useState([]);
+  const { fetchBlogs } = useAuth();
   useEffect(() => {
     const fetchMyBlogs = async () => {
       try {
@@ -29,6 +31,7 @@ function MyBlogs() {
       .then((res) => {
         toast.success(res.data.message || "Blog deleted successfully");
         setMyBlogs((value) => value.filter((blog) => blog._id !== id));
+        fetchBlogs && fetchBlogs();
       })
       .catch((error) => {
         toast.error(error.response.message || "Failed to delete blog");
@@ -41,33 +44,41 @@ function MyBlogs() {
           {myBlogs && myBlogs.length > 0 ? (
             myBlogs.map((element) => (
               <div
-                className="bg-white shadow-lg rounded-lg overflow-hidden"
+                className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
                 key={element._id}
               >
-                {element?.blogImage && (
-                  <img
-                    src={element?.blogImage.url}
-                    alt="blogImg"
-                    className="w-full h-48 object-cover"
-                  />
-                )}
-                <div className="p-4">
-                  <span className="text-sm text-gray-600">
-                    {element.category}
-                  </span>
-                  <h4 className="text-xl font-semibold my-2">
-                    {element.title}
-                  </h4>
+                <Link to={`/blog/${element._id}`} className="block">
+                  {element?.blogImage && (
+                    <img
+                      src={element?.blogImage.url}
+                      alt="blogImg"
+                      className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  )}
+                  <div className="p-4">
+                    <span className="text-sm text-gray-600">
+                      {element.category}
+                    </span>
+                    <h4 className="text-xl font-semibold my-2 hover:text-blue-600 transition-colors duration-300">
+                      {element.title}
+                    </h4>
+                    <p className="text-gray-600 text-sm mt-2 line-clamp-2">
+                      {element.about?.substring(0, 100)}...
+                    </p>
+                  </div>
+                </Link>
+                
+                <div className="px-4 pb-4">
                   <div className="flex justify-between mt-4">
                     <Link
                       to={`/blog/update/${element._id}`}
-                      className="text-blue-500 bg-white rounded-md shadow-lg px-3 py-1 border border-gray-400 hover:underline"
+                      className="text-blue-500 bg-white rounded-md shadow-lg px-3 py-1 border border-gray-400 hover:bg-blue-50 hover:border-blue-300 transition-colors duration-300"
                     >
                       UPDATE
                     </Link>
                     <button
                       onClick={() => handleDelete(element._id)}
-                      className="text-red-500 bg-white rounded-md shadow-lg px-3 py-1 border border-gray-400 hover:underline"
+                      className="text-red-500 bg-white rounded-md shadow-lg px-3 py-1 border border-gray-400 hover:bg-red-50 hover:border-red-300 transition-colors duration-300"
                     >
                       DELETE
                     </button>
