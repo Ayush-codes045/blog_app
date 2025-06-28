@@ -133,8 +133,9 @@
 
 // export const useAuth = () => useContext(AuthContext);
 // ✅ AuthProvider.jsx
+import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { BACKEND_URL } from "../utils.js";
 
 export const AuthContext = createContext();
 
@@ -147,15 +148,12 @@ export const AuthProvider = ({ children }) => {
     try {
       let token = localStorage.getItem("jwt");
       if (token) {
-        const { data } = await axios.get(
-          "http://localhost:4001/api/users/my-profile",
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const { data } = await axios.get(`${BACKEND_URL}/api/users/my-profile`, {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         setProfile(data.user);
         setIsAuthenticated(true);
       }
@@ -166,10 +164,9 @@ export const AuthProvider = ({ children }) => {
 
   const fetchBlogs = async () => {
     try {
-      const { data } = await axios.get(
-        "http://localhost:4001/api/blogs/all-blogs",
-        { withCredentials: true }
-      );
+      const { data } = await axios.get(`${BACKEND_URL}/api/blogs/all-blogs`, {
+        withCredentials: true,
+      });
       setBlogs(data);
     } catch (error) {
       console.log(error);

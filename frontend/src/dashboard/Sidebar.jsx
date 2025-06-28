@@ -5,6 +5,7 @@ import axios from "axios";
 import { CiMenuBurger } from "react-icons/ci";
 import { BiSolidLeftArrowAlt } from "react-icons/bi";
 import toast from "react-hot-toast";
+import { BACKEND_URL } from "../utils.js";
 
 function Sidebar({ setComponent }) {
   const { profile, setIsAuthenticated } = useAuth();
@@ -23,8 +24,9 @@ function Sidebar({ setComponent }) {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.get(
-        "http://localhost:4001/api/users/logout",
+      const { data } = await axios.post(
+        `${BACKEND_URL}/api/users/logout`,
+        {},
         { withCredentials: true }
       );
       toast.success(data.message);

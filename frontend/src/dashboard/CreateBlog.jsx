@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthProvider"; // ✅ use context
+import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../utils.js";
 
 function CreateBlog() {
   const [title, setTitle] = useState("");
@@ -48,7 +50,7 @@ function CreateBlog() {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:4001/api/blogs/create",
+        `${BACKEND_URL}/api/blogs/create`,
         formData,
         {
           withCredentials: true,
