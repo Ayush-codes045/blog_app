@@ -1,0 +1,1 @@
+export const BACKEND_URL="https://blog-app-dnjv.onrender.com"
