@@ -24,7 +24,7 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,
   "http://localhost:5173",
   "http://localhost:3000",
-  "https://blog-app-lpv7.vercel.app", // Your actual deployed Vercel URL
+  "https://blog-app-lpv7.vercel.app",
 ];
 
 app.use(
@@ -36,6 +36,7 @@ app.use(
       if (allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
+        console.log('CORS blocked origin:', origin);
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -64,6 +65,12 @@ try {
 app.use("/api/users", userRoute);
 app.use("/api/blogs", blogRoute);
 // app.use("/api/newsletter", newsletterRoute); // Removed
+
+// Test route to verify backend is working
+app.get("/", (req, res) => {
+  res.json({ message: "BlogifyApp Backend is running!", timestamp: new Date().toISOString() });
+});
+
 // Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
