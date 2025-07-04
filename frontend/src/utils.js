@@ -1,1 +1,1 @@
-export const BACKEND_URL = "https://blog-app-ayu.onrender.com";
+export const BACKEND_URL ="http://localhost:4001"

@@ -22,9 +22,6 @@ app.use(cookieParser());
 // CORS configuration for deployment
 const allowedOrigins = [
   process.env.FRONTEND_URL,
-  "http://localhost:5173",
-  "http://localhost:3000",
-  "https://blog-app-lpv7.vercel.app",
 ];
 
 app.use(
